@@ -1,6 +1,7 @@
 import asyncio
 from telegram import Update
 from telegram.ext import ContextTypes
+from database import db
 from services import rss_service
 
 polling_task = None
@@ -8,12 +9,14 @@ category = "Angular"
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global polling_task
+    await db.add_chat_id(update.message.chat_id)
     await update.message.reply_text('Started reading RSS feed...')
     if polling_task is None:
         polling_task = asyncio.create_task(rss_service.poll_rss_updates(context.bot, category))
 
 async def stop_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global polling_task
+    await db.remove_chat_id(update.message.chat_id)
     await update.message.reply_text('Stopped reading RSS feed...')
     if polling_task:
         polling_task.cancel()

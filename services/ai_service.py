@@ -3,14 +3,14 @@ from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv(".env")
-github_key = os.getenv("GITHUB_TOKEN")
+GITHUB_KEY = os.getenv("GITHUB_TOKEN")
 
-if not github_key:
+if not GITHUB_KEY:
     raise ValueError("API key not found. Please check your .env file.")
 
 client = OpenAI(
     base_url="https://models.inference.ai.azure.com",
-    api_key=github_key,
+    api_key=GITHUB_KEY,
 )
 
 def generate_cover_letter(content: str) -> str:
